@@ -6,14 +6,13 @@ struct Size(i32, i32);
 
 struct Area(Pos, Size);
 
+fn area<T: ToArea>(t: T) -> Area { t.to_area() }
+
 fn main() {
     println!("{}", Pos(0, 0));
     println!(
         "{}",
-        Area(
-            Pos(100, 200),
-            Size(200, 300),
-        )
+        area(Pos(50, 50))
     );
 }
 
@@ -47,6 +46,19 @@ impl Area {
     fn y(&self) -> i32 { self.pos().x() }
     fn w(&self) -> i32 { self.size().w() }
     fn h(&self) -> i32 { self.size().h() }
+}
+
+trait ToArea {
+    fn to_area(&self) -> Area;
+}
+
+impl ToArea for Pos {
+    fn to_area(&self) -> Area {
+        Area(
+            Pos(self.x(), self.y()),
+            Size(0, 0)
+        )
+    }
 }
 
 impl Display for Area {
